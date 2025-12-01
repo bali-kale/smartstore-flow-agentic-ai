@@ -1,0 +1,65 @@
+/* src/pages/HomePage.css - modern AI themed */
+
+.homepage {
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  min-height: calc(100vh - 120px);
+  padding: 40px 20px;
+}
+
+.welcome-message { text-align: left; margin: 0; }
+
+.welcome-message h1 {
+  font-size: clamp(1.8rem, 3.6vw, 3.4rem);
+  margin:0 0 8px 0;
+  font-weight: 700;
+}
+
+.welcome-sub { color: var(--muted); margin-bottom: 18px; }
+
+.division-boxes {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  width:100%;
+}
+
+.division-box {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 20px;
+  border-radius: var(--radius);
+  color: #eaf6ff;
+  text-align: left;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.division-box::after{
+  content: '';
+  position: absolute;
+  right: -40%; top: -40%;
+  width: 180%; height: 180%;
+  background: radial-gradient(circle at 30% 30%, rgba(0,229,255,0.06), transparent 8%),
+              radial-gradient(circle at 70% 70%, rgba(124,77,255,0.04), transparent 8%);
+  pointer-events:none;
+}
+
+.division-box:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(2,6,23,0.6); border-color: rgba(124,77,255,0.22); }
+
+.division-box h2 { margin:0 0 6px 0; font-size:1.4rem; }
+.division-box p { margin:0 0 12px 0; color:var(--muted); }
+
+.division-link {
+  display:inline-block;
+  padding:10px 14px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #021226;
+  border-radius: 10px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+ 
