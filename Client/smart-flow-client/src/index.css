@@ -10,9 +10,6 @@
   --header-offset: 76px; /* header height used across layout */
 }
 
-html, body, #root {
-  /* height: 100%; */
-}
 
 body {
   margin: 0;
@@ -50,4 +47,9 @@ button{
   font-weight: 600;
   box-shadow: 0 6px 18px rgba(124,77,255,0.12);
   transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+*{
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;
 }
