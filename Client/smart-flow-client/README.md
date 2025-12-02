@@ -25,4 +25,4 @@ Testing endpoints
 Notes
 - The client includes updated CSS in `src/index.css`, `src/App.css`, `src/components/Header.css`, and `src/pages/HomePage.css` to provide a modern look-and-feel tuned for the demo.
 
-Want help wiring a demo page that automatically connects to the server and streams webcam frames? I can add a small component and demo route to the app.
+
