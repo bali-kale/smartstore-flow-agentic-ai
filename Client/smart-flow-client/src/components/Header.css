@@ -36,4 +36,4 @@
 
 .header-right span { font-size:0.95rem; color:var(--muted); }
 
-body { padding-top: 76px; }
+body { padding-top: var(--header-offset); }

@@ -1,0 +1,146 @@
+/* Division page layout: two-column with controls on left and processed output on right */
+:root {
+    --panel-width: 420px;
+}
+
+.division-page {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    /* reduce top space so layout sits closer under header */
+    /* use header offset variable so sizing stays consistent */
+    min-height: calc(100vh - var(--header-offset) - 8px);
+    padding-top: 0;
+    margin-top: 6px;
+}
+
+.division-left {
+    flex: 1 1 60%;
+    overflow: auto;
+    padding: 12px 10px;
+}
+
+.upload-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 16px;
+}
+
+.upload-section > div {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 14px;
+    border-radius: 10px;
+    transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.upload-section > div:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(2,6,23,0.45);
+    border-color: rgba(124,77,255,0.16);
+}
+
+.upload-section h3 { margin: 0 0 8px 0; font-size: 1rem; }
+
+input[type="file"] {
+    width: 100%;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed rgba(255,255,255,0.04);
+    border-radius: 8px;
+    color: var(--muted);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #021226;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    box-shadow: 0 6px 18px rgba(124,77,255,0.08);
+}
+.btn:active { transform: translateY(1px); }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid rgba(255,255,255,0.04); }
+
+.division-right {
+    height: 450px;
+    flex: 0 0 var(--panel-width);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    justify-content: flex-start;
+    background: linear-gradient(180deg, rgba(12,18,30,0.55), rgba(12,18,30,0.45));
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    overflow: hidden; /* prevent internal scrolling */
+    backdrop-filter: blur(6px) saturate(120%);
+    /* limit overall panel height to viewport minus header/spacing so it cannot overflow */
+    max-height: calc(100vh - var(--header-offset) - 32px);
+}
+
+.division-right h3 { margin: 0 0 6px 0; font-size: 1.05rem; }
+
+.processed-output-wrapper {
+    width: 100%;
+    /* let the wrapper grow to fill available space in the right panel without causing overflow */
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+    border-radius: 8px;
+    transition: background 180ms ease, box-shadow 180ms ease;
+    overflow: hidden; /* ensure any large content is clipped and scaled */
+}
+
+.processed-output-wrapper img {
+    max-width: 100%;
+    /* max-height: 100%; */
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+    display: block;
+}
+
+.muted { color: var(--muted); }
+
+.result { margin-top: 10px; }
+.result .green { color: #b7f2d8; }
+.result .red { color: #ffb3b3; }
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.06);
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+    margin-top: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 1100px) {
+    .upload-section { grid-template-columns: 1fr; }
+    .division-right { flex: none; width: 100%; order: 2; }
+    .division-left { order: 1; }
+    .processed-output-wrapper { height: 320px; }
+}
+
+@media (max-width: 600px) {
+    .division-page { gap: 12px; padding: 8px; }
+    .division-right { padding: 12px; }
+}

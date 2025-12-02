@@ -14,7 +14,30 @@ from Detection.detect import Detector
 
 app = Flask(__name__)
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+
+# Prefer eventlet/gevent when available and monkey-patch them; otherwise let
+# flask-socketio choose the best available (threading fallback).
+selected_async = 'auto'
+try:
+	import eventlet
+	eventlet.monkey_patch()
+	selected_async = 'eventlet'
+except Exception:
+	try:
+		import gevent
+		from gevent import monkey as gevent_monkey
+		gevent_monkey.patch_all()
+		selected_async = 'gevent'
+	except Exception:
+		selected_async = 'threading'
+
+if selected_async in ('eventlet', 'gevent'):
+	socketio = SocketIO(app, cors_allowed_origins="*", async_mode=selected_async)
+else:
+	# do not force async_mode; let flask-socketio/engineio pick the best available
+	socketio = SocketIO(app, cors_allowed_origins="*")
+
+print(f"[server] Flask-SocketIO selected async mode: {selected_async}")
 
 # single Detector instance (warm model once)
 detector = Detector()

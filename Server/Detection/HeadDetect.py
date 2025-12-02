@@ -90,10 +90,10 @@ class HeadDetect:
         return summary
 
 
-if __name__ == "__main__":
-    hd = HeadDetect()
-    # example: run on file
-    # hd.run_on_image(r"./assets/people.jpg")
-    hd.run_on_video(r"./assets/videoplayback.mp4")
-    # hd.run_on_video(0) 
+# if __name__ == "__main__":
+#     hd = HeadDetect()
+#     # example: run on file
+#     # hd.run_on_image(r"./assets/people.jpg")
+#     hd.run_on_video(r"Server\\Detection\\assets\\videoplayback.mp4")
+#     # hd.run_on_video(0) 
 
