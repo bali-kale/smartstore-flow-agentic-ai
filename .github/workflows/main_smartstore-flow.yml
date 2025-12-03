@@ -3,7 +3,6 @@
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
 name: Build and deploy smartstore-flow full‑stack to Azure Web App
- 
 on:
   push:
     branches:
@@ -11,11 +10,10 @@ on:
   workflow_dispatch:
  
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
- 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,7 +52,7 @@ jobs:
           pip install -r requirements.txt
  
       # -------------------------
-      # Copy frontend build into backend static folder (adjust as needed)
+      # Copy frontend build into backend static folder
       # -------------------------
       - name: Copy frontend build to backend
         run: |
@@ -63,29 +61,12 @@ jobs:
           cp -r Client/smart-flow-client/build/* Server/static/
  
       # -------------------------
-      # Upload full app for deployment
+      # Deploy directly to Azure
       # -------------------------
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: fullstack-app
-          path: Server
- 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: fullstack-app
- 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'smartstore-flow'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_977E8C8C121241379E7E1964D30AF8D0 }}
-          package: fullstack-app
-
-
+          package: Server
