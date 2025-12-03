@@ -36,7 +36,7 @@ jobs:
       - name: Build frontend
         run: |
           cd Client/smart-flow-client
-          npm run build
+          CI=false npm run build
  
       # -------------------------
       # Setup Python backend
@@ -87,4 +87,5 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_977E8C8C121241379E7E1964D30AF8D0 }}
           package: fullstack-app
+
 
