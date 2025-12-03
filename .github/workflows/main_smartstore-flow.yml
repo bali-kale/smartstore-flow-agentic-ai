@@ -63,9 +63,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C70CFA61646F4546B19623A312D41A95 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BA4CD081FE494A4ABB7D3787AEBFBBE5 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6F3D37B8E5F74E66AB3A2ADFCC703F80 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7AE1704AC1594E619542AF090D62F233 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A7B1121364BF467DA8B7248511F7D5F5 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_10096B7D4CBE447E99C947A65DDD104E }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -73,6 +73,4 @@ jobs:
         with:
           app-name: 'smartstore-flow'
           slot-name: 'Production'
-
           
-
