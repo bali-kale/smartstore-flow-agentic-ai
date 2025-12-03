@@ -31,7 +31,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd Client/smart-flow-client
-          npm ci
+          npm install
  
       - name: Build frontend
         run: |
@@ -87,3 +87,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_977E8C8C121241379E7E1964D30AF8D0 }}
           package: fullstack-app
+
