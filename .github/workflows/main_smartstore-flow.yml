@@ -62,9 +62,10 @@ jobs:
         run: |
           rm -rf Server/static || true
           mkdir -p Server/static
-          cp -r Client/smart-flow-client/build/* Server/static/
+          cp -r Client/smart-flow-client/build/* Server/static/  # Copy everything (index.html, asset-manifest, favicon.ico) directly to Server/static/
+          cp -r Client/smart-flow-client/build/static/* Server/static/  # Copy CSS and JS files from the nested static folder
           echo "Contents of Server/static after copying frontend build:"
-          ls -R Server/static  # List the contents of the 'Server/static' folder for debugging     
+          ls -R Server/static  # List the contents of 'Server/static' for debugging
       # -------------------------
       # Deploy directly to Azure
       # -------------------------
@@ -75,6 +76,7 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./Server
+
 
 
 
