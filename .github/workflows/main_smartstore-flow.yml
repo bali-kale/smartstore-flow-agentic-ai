@@ -2,81 +2,54 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - smartstore-flow
-
+name: Build & deploy full-stack (React + Python) to Azure App Service
+ 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
-
+ 
 jobs:
-  # Build and deploy frontend to Azure Static Web Apps
-  build-and-deploy-frontend:
+  build-and-deploy:
     runs-on: ubuntu-latest
+ 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
+ 
+      - name: Setup Node.js for frontend
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install frontend dependencies
+ 
+      - name: Install and build React frontend
         run: |
           cd Client/smart-flow-client
           npm install
-
-      - name: Build frontend
-        run: |
-          cd Client/smart-flow-client
           CI=false npm run build
-
-      - name: Deploy frontend to Azure Static Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'smartstore-frontend'  # Your Azure Static Web App name for the frontend
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_STATICWEBAPP_PUBLISHPROFILE }}  # Azure Static Web App publish profile
-          package: './Client/smart-flow-client/build'  # React build directory
-
-  # Build and deploy backend to Azure App Service
-  build-and-deploy-backend:
-    runs-on: ubuntu-latest
-    needs: build-and-deploy-frontend
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python
+ 
+      - name: Copy frontend build into backend static folder
+        run: |
+          rm -rf Server/static || true
+          mkdir -p Server/static
+          cp -r Client/smart-flow-client/build/* Server/static/
+ 
+      - name: Setup Python for backend
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
+ 
       - name: Install backend dependencies
         run: |
           cd Server
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
-
-      - name: Install system dependencies for OpenCV
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1 libglib2.0-0
-
-      - name: Copy frontend build to backend
-        run: |
-          rm -rf Server/static || true
-          mkdir -p Server/static
-          cp -r Client/smart-flow-client/build/* Server/static/
-
-      - name: Deploy backend to Azure Web App
+ 
+      - name: Deploy full stack to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'smartstore-backend'  # Your Azure App Service backend name
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}  # Publish profile for Azure App Service
+          app-name: 'smartstore-flow'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISH_PROFILE }}
           package: Server
-
+ 
