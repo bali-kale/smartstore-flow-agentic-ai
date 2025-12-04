@@ -2,54 +2,74 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build & deploy full-stack (React + Python) to Azure App Service
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
  
+name: Build and deploy smartstore-flow full‑stack to Azure Web App
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
- 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
- 
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
- 
-      - name: Setup Node.js for frontend
+      # -------------------------
+      # Build frontend (React)
+      # -------------------------
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
- 
-      - name: Install and build React frontend
+      - name: Install frontend dependencies
         run: |
           cd Client/smart-flow-client
           npm install
-          CI=false npm run build
- 
-      - name: Copy frontend build into backend static folder
+      - name: Build frontend
         run: |
-          rm -rf Server/static || true
-          mkdir -p Server/static
-          cp -r Client/smart-flow-client/build/* Server/static/
- 
-      - name: Setup Python for backend
+          cd Client/smart-flow-client
+          CI=false npm run build
+      # -------------------------
+      # Setup Python backend
+      # -------------------------
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
- 
       - name: Install backend dependencies
         run: |
           cd Server
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
- 
-      - name: Deploy full stack to Azure Web App
+      # -------------------------
+      # Install system dependencies for OpenCV
+      # -------------------------
+      - name: Install system dependencies for OpenCV
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1 libglib2.0-0
+      # -------------------------
+      # Copy frontend build into backend static folder
+      # -------------------------
+      - name: Copy frontend build to backend
+        run: |
+          rm -rf Server/static || true
+          mkdir -p Server/static
+          cp -r Client/smart-flow-client/build/* Server/static/
+      # -------------------------
+      # Deploy directly to Azure
+      # -------------------------
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'smartstore-flow'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISH_PROFILE }}
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: Server
- 
