@@ -17,7 +17,19 @@ const DivisionPage = () => {
   const [detectionStarted, setDetectionStarted] = useState(false);
   const [detectionCompleted, setDetectionCompleted] = useState(false);
   const [avgPeople, setAvgPeople] = useState(0);
+  const [threshold, setThreshold] = useState(10);
   const totalPeopleRef = useRef(0);
+
+  const getCountColor = (count, threshold) => {
+    const numericThreshold = Number(threshold) || 0;
+    if (count >= numericThreshold) {
+      return 'red';
+    } else if (count >= numericThreshold / 2) {
+      return 'yellow';
+    } else {
+      return 'green';
+    }
+  };
   const framesCountRef = useRef(0);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
@@ -447,6 +459,10 @@ const DivisionPage = () => {
               </button>
             </div>
             <div style={{ marginTop: 12, marginBottom: 8 }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Threshold</label>
+              <input type="number" value={threshold} onChange={(e) => setThreshold(e.target.value === '' ? '' : Number(e.target.value))} />
+            </div>
+            <div style={{ marginTop: 12, marginBottom: 8 }}>
               <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Streaming Controls</label>
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                 <div style={{ flex: 1 }}>
@@ -491,7 +507,13 @@ const DivisionPage = () => {
         {detectionStarted && !detectionCompleted && (
           <div className="division-right">
             <h3 style={{ margin: 0 }}>Processed Output</h3>
-            <div style={{ marginTop: 6, marginBottom: 8, fontWeight: 600 }}>
+            <div style={{
+              marginTop: 6,
+              marginBottom: 8,
+              fontWeight: 'bold',
+              fontSize: '2rem',
+              color: getCountColor(avgPeople, threshold)
+            }}>
               Avg People: {Number.isFinite(avgPeople) ? avgPeople.toFixed(2) : '0.00'}
             </div>
             {liveCount > 0 && <div>Live detected people: {liveCount}</div>}
@@ -514,7 +536,16 @@ const DivisionPage = () => {
             <h3 style={{ margin: 0 }}>Detection Summary</h3>
             <div style={{ marginTop: 8 }}>
               {/* <div><strong>Total frames:</strong> {sentFramesRef.current}</div> */}
-              <div><strong>Average people/frame:</strong> {Number.isFinite(avgPeople) ? Math.round(avgPeople) : 0}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <strong>Average people/frame:</strong>
+                <span style={{
+                  fontWeight: 'bold',
+                  fontSize: '1.5rem',
+                  color: getCountColor(avgPeople, threshold)
+                }}>
+                  {Number.isFinite(avgPeople) ? Math.round(avgPeople) : 0}
+                </span>
+              </div>
               <div><strong>Avg inference time (s):</strong> {inferenceTimesRef.current.length ? (inferenceTimesRef.current.reduce((a, b) => a + b, 0) / inferenceTimesRef.current.length).toFixed(2) : 'n/a'}</div>
 
               {/* Show processed image when the input was an image */}
