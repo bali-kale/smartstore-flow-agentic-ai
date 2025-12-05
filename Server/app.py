@@ -60,9 +60,9 @@ def encode_image_to_base64(img) -> str:
 	return 'data:image/jpeg;base64,' + b64
 
 
-@app.route('/')
-def index():
-	return jsonify({'message': 'Detection server running'})
+# @app.route('/')
+# def index():
+# 	return jsonify({'message': 'Detection server running'})
 
 
 @app.route('/upload-image', methods=['POST'])
@@ -123,7 +123,7 @@ from flask import send_from_directory
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_frontend(path):
-    if path != "" and os.path.exists(os.path.join("static", path)):
+    if path != "" and os.path.join(app.static_folder, path):
         return send_from_directory('static', path)
     # Always return index.html for React Router client-side routing
     return send_from_directory('static', 'index.html')
