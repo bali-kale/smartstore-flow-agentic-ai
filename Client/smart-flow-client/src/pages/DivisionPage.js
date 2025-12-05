@@ -114,7 +114,7 @@ const DivisionPage = () => {
       formData.append('file', image);
       formData.append('confidence', '0.8');
       try {
-        const response = await axios.post('http://localhost:5000/upload-image', formData, {
+        const response = await axios.post('/upload-image', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setProcessedImage(response.data.image);
@@ -140,7 +140,7 @@ const DivisionPage = () => {
       // mark detection started for video streaming
       setDetectionStarted(true);
       if (!socketRef.current) {
-        socketRef.current = io('http://localhost:5000');
+        socketRef.current = io();
         socketRef.current.on('processed_frame', (data) => {
           if (data && data.image) {
             // mark last response time so loader can wait until responses stop
@@ -233,7 +233,7 @@ const DivisionPage = () => {
                     fd.append('file', resBlob, 'frame.jpg');
                     fd.append('confidence', '0.8');
                     console.log('[debug] sending initial test frame to /upload-image');
-                    axios.post('http://localhost:5000/upload-image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+                    axios.post('/upload-image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
                       .then(r => { console.log('[debug] initial frame response', r.data); lastResponseAtRef.current = Date.now(); setLoading(true); sentFramesRef.current += 1; })
                       .catch(e => { console.warn('[debug] initial frame POST failed', e); });
                   })
@@ -418,7 +418,7 @@ const DivisionPage = () => {
               <button onClick={() => {
                 // start a socket session to receive live frames if not already started
                 if (!socketRef.current) {
-                  socketRef.current = io('http://localhost:5000');
+                  socketRef.current = io();
                   socketRef.current.on('processed_frame', (data) => {
                     if (data && data.image) {
                       try {
@@ -585,4 +585,3 @@ const DivisionPage = () => {
 };
 
 export default DivisionPage;
-
