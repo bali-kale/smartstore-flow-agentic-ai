@@ -7,12 +7,13 @@ import base64
 import cv2
 import numpy as np
 import time
+import os
 
 # import detector from Detection folder (do not modify detection logic)
 from Detection.detect import Detector
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 CORS(app)
 
 # Prefer eventlet/gevent when available and monkey-patch them; otherwise let
@@ -116,6 +117,16 @@ def handle_frame(data):
 	except Exception as e:
 		emit('error', {'error': str(e)})
 
+from flask import send_from_directory
+ 
+# Serve React build files
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    if path != "" and os.path.exists(os.path.join("static", path)):
+        return send_from_directory('static', path)
+    # Always return index.html for React Router client-side routing
+    return send_from_directory('static', 'index.html')
 
 if __name__ == '__main__':
 	# use eventlet for websocket support; install via `pip install eventlet`.
