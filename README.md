@@ -29,3 +29,5 @@ Usage
 Notes
 - The detection model may require GPU-appropriate PyTorch wheels for acceptable performance. See `Server/Detection/requirements.txt` and the PyTorch website for appropriate installation commands.
 - The server intentionally creates a single `Detector` instance at startup to avoid repeatedly reloading model weights.
+
+<!-- end of file -->
