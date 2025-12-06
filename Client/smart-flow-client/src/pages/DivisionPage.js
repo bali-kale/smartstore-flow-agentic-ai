@@ -401,8 +401,40 @@ const DivisionPage = () => {
 
   return (
     <div className="container">
-      <h1>{division}</h1>
+      <h1 style={{textTransform: "uppercase"}}>{division}</h1>
+      <h3>
+        Crowd status in {division}:{' '}
+        <span style={{ color: getCountColor(avgPeople, threshold) }}>
+          {avgPeople >= threshold
+            ? 'Crowded'
+            : avgPeople >= threshold / 2
+            ? 'Partially Crowded'
+            : 'Normal'}
+        </span>
+      </h3>
+      <div className="plasma-meter-container">
+        <div className="plasma-readout">
+          {avgPeople >= threshold
+            ? 'Crowded'
+            : avgPeople >= threshold / 2
+            ? 'Partially Crowded'
+            : 'Normal'}
+        </div>
+        <div className="plasma-bar-track">
+          <div
+            className={`plasma-bar-fill ${
+              avgPeople >= threshold
+                ? 'crowded'
+                : avgPeople >= threshold / 2
+                ? 'partially'
+                : 'normal'
+            }`}
+            style={{ width: `${Math.min((avgPeople / threshold) * 100, 100)}%` }}
+          ></div>
+        </div>
+      </div>
       <div className="division-page">
+
         <div className="division-left">
           <div className="upload-section">
             <div>
@@ -413,7 +445,7 @@ const DivisionPage = () => {
               <h3>Upload Video</h3>
               <input ref={videoInputRef} type="file" accept="video/*" onChange={(e) => handleFileChange(e, 'video')} />
             </div>
-            <div>
+            {/* <div>
               <h3>Live CCTV Footage</h3>
               <button onClick={() => {
                 // start a socket session to receive live frames if not already started
@@ -457,7 +489,7 @@ const DivisionPage = () => {
               }}>
                 View Live
               </button>
-            </div>
+            </div> */}
             <div style={{ marginTop: 12, marginBottom: 8 }}>
               <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Threshold</label>
               <input type="number" value={threshold} onChange={(e) => setThreshold(e.target.value === '' ? '' : Number(e.target.value))} />
@@ -481,15 +513,17 @@ const DivisionPage = () => {
               </div>
             </div>
 
-            <button onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Processing...' : 'Submit'}
-            </button>
-            <button onClick={stopStreaming} style={{ marginLeft: 12 }}>
-              Stop Streaming
-            </button>
-            <button onClick={handleReset} style={{ marginLeft: 12 }}>
-              Reset
-            </button>
+            <div className="action-buttons">
+              <button onClick={handleSubmit} className="btn" disabled={loading}>
+                {loading ? 'Processing...' : 'Submit'}
+              </button>
+              <button onClick={stopStreaming} className="btn">
+                Stop Streaming
+              </button>
+              <button onClick={handleReset} className="btn">
+                Reset
+              </button>
+            </div>
           </div>
 
           {loading && <div className="loading-spinner"></div>}
@@ -568,13 +602,13 @@ const DivisionPage = () => {
                 </div>
               )}
 
-              <div style={{ marginTop: 12 }}>
-                <button onClick={handleReset}>Reset</button>
+              <div className="action-buttons" style={{ marginTop: 12 }}>
+                <button onClick={handleReset} className="btn">Reset</button>
                 <button onClick={() => {
                   // Close: hide summary and keep video preview available
                   setDetectionCompleted(false);
                   setProcessedImage(null);
-                }} style={{ marginLeft: 8 }}>Close</button>
+                }} className="btn">Close</button>
               </div>
             </div>
           </div>
